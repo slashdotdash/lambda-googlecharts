@@ -17,7 +17,7 @@
   "homepage": "https://github.com/zallek/lambda-googlecharts#readme",
   "scripts": {},
   "dependencies": {
-    "full-icu": "^1.0.3",
+    "full-icu": "1.2.0",
     "node-googlecharts": "slashdotdash/node-googlecharts#feature/google-charts-loader"
   }
 }

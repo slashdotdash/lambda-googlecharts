@@ -8,6 +8,8 @@ provider:
 functions:
   chart:
     handler: handler.renderChart
+    environment:
+        NODE_ICU_DATA: node_modules/full-icu
     events:
       - http:
           path: chart
