@@ -1,0 +1,23 @@
+service: lambda-googlecharts
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: eu-west-2
+
+functions:
+  chart:
+    handler: handler.renderChart
+    events:
+      - http:
+          path: chart
+          method: get
+          integration: lambda
+          request:
+              template:
+                  application/json: '{ "chartOptions" : $input.params(''chartOptions'') }'
+          response:
+              headers:
+                  Access-Control-Allow-Origin: "'*'"
+                  Content-Type: "'image/svg+xml'"
+              template: $input.path('$')

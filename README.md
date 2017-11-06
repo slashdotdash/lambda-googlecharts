@@ -21,15 +21,14 @@ Install project dependencies
 npm install
 ```
 
-
 ## Run functions locally
 ```
-serverless function run generate-svg
+serverless invoke -f chart -l
 ```
 
 ## Deploy your functions and endpoints:
 ```
-serverless dash deploy
+serverless deploy function -f chart
 ```
 
 ## FAQ

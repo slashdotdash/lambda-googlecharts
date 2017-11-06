@@ -5,7 +5,7 @@
   "author": "Nicolas Fortin <nicolas.fortin37@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node" : ">=4.0"
+    "node": ">=4.0"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,6 @@
   "scripts": {},
   "dependencies": {
     "full-icu": "^1.0.3",
-    "node-googlecharts": "zallek/node-googlecharts#master"
+    "node-googlecharts": "slashdotdash/node-googlecharts#feature/google-charts-loader"
   }
 }
