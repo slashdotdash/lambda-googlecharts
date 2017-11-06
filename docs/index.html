@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>lambda-googlecharts</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1>
+        <a href="https://github.com/slashdotdash/lambda-googlecharts">lambda-googlecharts</a>
+      </h1>
+
+      <form>
+        <div class="form-group">
+          <label for="input-format" class="control-label">Format</label>
+          <select id="input-format" class="form-control">
+            <option value="svg" selected>SVG</option>
+          </select>
+        </div>
+        <div id="div-chartOptions" class="form-group">
+          <label for="input-chartOptions" class="control-label">ChartOptions</label>
+          <textarea id="input-chartOptions" class="form-control" rows="20" cols="50" >
+{
+    "chartType": "Gauge",
+    "packages": ["gauge"],
+    "data": [
+      ["Label", "Value"],
+      ["Everyday", 20]
+    ],
+    "options": {
+      "width": 200, "height": 200,
+       "max": 100,
+      "redFrom": 0, "redTo": 40,
+      "yellowFrom":41, "yellowTo": 70,
+      "greenFrom": 71, "greenTo": 100,
+      "minorTicks": 5
+    }
+}
+          </textarea>
+        </div>
+        <button id="generate" class="btn btn-default">Generate</button>
+      </form>
+
+      <hr />
+
+      <div>
+        <dl>
+          <dt>URL</dt>
+          <dd><a href="#" id="url"></a></dd>
+
+          <dt>Preview</dt>
+          <dd><img id="result" src="" width="0" height="0"/></dd>
+        </dl>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $('#generate').click(function(e) {
+        e.preventDefault();
+
+        var format = $('#input-format').val();
+        var chartOptions = parseJsonSafe($('#input-chartOptions').val());
+        if (!chartOptions) {
+          $('#div-chartOptions').addClass('has-error');
+          $('#url').text('');
+          $('#result').attr({src: ''});
+          return;
+        }
+
+        $('#div-chartOptions').removeClass('has-error');
+
+        var options = encodeURIComponent(JSON.stringify(chartOptions));
+        var url = 'https://4arjzlaw96.execute-api.eu-west-2.amazonaws.com/dev/chart?chartOptions=' + options;
+
+        $('#url').text(url)
+        $('#url').attr('href', url);
+
+        $('#result').attr({
+          src: url,
+          width: (chartOptions.options || {}).width || 600,
+          height: (chartOptions.options || {}).height || 400
+        });
+      })
+
+      function parseJsonSafe(str) {
+        try {
+          return JSON.parse(str);
+        } catch (e) {
+          console.error(e);
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
