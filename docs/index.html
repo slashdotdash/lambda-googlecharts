@@ -22,32 +22,50 @@
 
       <form>
         <div class="form-group">
-          <label for="input-format" class="control-label">Format</label>
-          <select id="input-format" class="form-control">
+          <label for="format" class="control-label">Format</label>
+          <select id="format" class="form-control">
             <option value="svg" selected>SVG</option>
           </select>
         </div>
-        <div id="div-chartOptions" class="form-group">
-          <label for="input-chartOptions" class="control-label">ChartOptions</label>
-          <textarea id="input-chartOptions" class="form-control" rows="20" cols="50" >
-{
-    "chartType": "Gauge",
-    "packages": ["gauge"],
-    "data": [
-      ["Label", "Value"],
-      ["Everyday", 20]
-    ],
-    "options": {
-      "width": 200, "height": 200,
-       "max": 100,
-      "redFrom": 0, "redTo": 40,
-      "yellowFrom":41, "yellowTo": 70,
-      "greenFrom": 71, "greenTo": 100,
-      "minorTicks": 5
-    }
-}
-          </textarea>
+        <div id="chartOptions" class="form-group">
+          <label for="chartType" class="control-label">Chart type</label>
+          <select id="chartType" class="form-control">
+            <option value="GeoChart">Geo Chart</option>
+            <option value="ScatterChart">Scatter Chart</option>
+            <option value="ColumnChart">Column Chart</option>
+            <option value="Histogram">Histogram</option>
+            <option value="BarChart">Bar Chart</option>
+            <option value="ComboChart">Combo Chart</option>
+            <option value="AreaChart">Area Chart</option>
+            <option value="SteppedAreaChart">Stepped Area Chart</option>
+            <option value="LineChart">Line Chart</option>
+            <option value="PieChart">Pie Chart</option>
+            <option value="BubbleChart">Bubble Chart</option>
+            <option value="OrgChart">Organization Chart</option>
+            <option value="TreeMap">Treemaps</option>
+            <option value="Table">Table</option>
+            <option value="Timeline">Timelines</option>
+            <option value="Gauge" selected>Gauge</option>
+            <option value="CandlestickChart">Candlestick Charts</option>
+          </select>
+
+          <label for="data" class="control-label">Data</label>
+          <textarea id="data" class="form-control" rows="10" cols="50">[
+  ["Label", "Value"],
+  ["Everyday", 20]
+]</textarea>
+
+          <label for="options" class="control-label">Options</label>
+          <textarea id="options" class="form-control" rows="10" cols="50" >{
+  "width": 200, "height": 200,
+  "max": 100,
+  "redFrom": 0, "redTo": 40,
+  "yellowFrom":41, "yellowTo": 70,
+  "greenFrom": 71, "greenTo": 100,
+  "minorTicks": 5
+}</textarea>
         </div>
+
         <button id="generate" class="btn btn-default">Generate</button>
       </form>
 
@@ -70,27 +88,46 @@
       $('#generate').click(function(e) {
         e.preventDefault();
 
-        var format = $('#input-format').val();
-        var chartOptions = parseJsonSafe($('#input-chartOptions').val());
-        if (!chartOptions) {
-          $('#div-chartOptions').addClass('has-error');
+        $('#options').removeClass('has-error');
+        $('#data').removeClass('has-error');
+        $('#result').attr({src: ''});
+        $('#url').text('');
+
+        var format = $('#format').val();
+
+        var chartType = $('#chartType').val();
+
+        var options = parseJsonSafe($('#options').val());
+        if (!options) {
+          $('#options').addClass('has-error');
           $('#url').text('');
           $('#result').attr({src: ''});
           return;
         }
 
-        $('#div-chartOptions').removeClass('has-error');
+        var dataTable = parseJsonSafe($('#data').val());
+        if (!dataTable) {
+          $('#data').addClass('has-error');
+          $('#url').text('');
+          $('#result').attr({src: ''});
+          return;
+        }
 
-        var options = encodeURIComponent(JSON.stringify(chartOptions));
-        var url = 'https://4arjzlaw96.execute-api.eu-west-2.amazonaws.com/dev/chart?chartOptions=' + options;
+        var chartOptions = encodeURIComponent(JSON.stringify({
+          chartType: chartType,
+          dataTable: dataTable,
+          options: options
+        }));
 
-        $('#url').text(url)
+        var url = 'https://4arjzlaw96.execute-api.eu-west-2.amazonaws.com/dev/chart?chartOptions=' + chartOptions;
+
+        $('#url').text(url);
         $('#url').attr('href', url);
 
         $('#result').attr({
           src: url,
-          width: (chartOptions.options || {}).width || 600,
-          height: (chartOptions.options || {}).height || 400
+          width: options.width || 600,
+          height: options.height || 400
         });
       })
 

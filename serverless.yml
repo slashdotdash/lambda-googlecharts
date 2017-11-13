@@ -17,7 +17,7 @@ functions:
           integration: lambda
           request:
               template:
-                  application/json: '{ "chartOptions" : $input.params(''chartOptions'') }'
+                  application/json: '{"chartOptions": $input.params(''chartOptions'')}'
           response:
               headers:
                   Access-Control-Allow-Origin: "'*'"
