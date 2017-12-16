@@ -4,22 +4,61 @@ provider:
   name: aws
   runtime: nodejs6.10
   region: eu-west-2
+  versionFunctions: false
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:GetObject"
+      Resource: "arn:aws:s3:::${opt:s3bucket}/*"
 
 functions:
-  chart:
-    handler: handler.renderChart
+  # chart:
+  #   handler: handler.renderChart
+  #   environment:
+  #       NODE_ICU_DATA: node_modules/full-icu
+  #   events:
+  #     - http:
+  #         path: chart
+  #         method: get
+  #         integration: lambda
+  #         request:
+  #             template:
+  #                 application/json: '{"chartOptions": $input.params(''chartOptions'')}'
+  #         response:
+  #             headers:
+  #                 Access-Control-Allow-Origin: "'*'"
+  #                 Content-Type: "'image/svg+xml'"
+  #             template: $input.path('$')
+
+  chart2:
+    handler: handler.renderS3Chart
     environment:
-        NODE_ICU_DATA: node_modules/full-icu
+      NODE_ICU_DATA: node_modules/full-icu
     events:
       - http:
-          path: chart
+          path: chart/{chart}
           method: get
           integration: lambda
           request:
-              template:
-                  application/json: '{"chartOptions": $input.params(''chartOptions'')}'
+            parameters:
+              paths:
+                chart: true
+            template:
+              application/json: >
+                {
+                  "s3Bucket": "${opt:s3bucket}",
+                  "chart": "$input.params('chart')",
+                  "data": {
+                    #foreach($param in $input.params().querystring.keySet())
+                      "$param": "$util.escapeJavaScript($input.params().querystring.get($param))" #if($foreach.hasNext),#end
+                    #end
+                  }
+                }
           response:
-              headers:
-                  Access-Control-Allow-Origin: "'*'"
-                  Content-Type: "'image/svg+xml'"
-              template: $input.path('$')
+            headers:
+              Access-Control-Allow-Origin: "'*'"
+              Content-Type: "'image/svg+xml'"
+            template: $input.path('$')
+
+# s3:ListBucket
+# s3:GetObject

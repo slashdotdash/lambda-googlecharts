@@ -1,5 +1,6 @@
 'use strict';
 
+const S3 = require('aws-sdk/clients/s3');
 const spawn = require('child_process').exec;
 
 module.exports.renderChart = function(event, context) {
@@ -16,3 +17,34 @@ module.exports.renderChart = function(event, context) {
     }
   );
 };
+
+module.exports.renderS3Chart = function(event, context) {
+  console.log('event', event);
+
+  const s3Bucket = event.s3Bucket;
+  const chart = event.chart;
+  const data = event.data;
+
+  console.log('s3Bucket', s3Bucket);
+  console.log('chart', chart);
+  console.log('data', data);
+
+  const s3 = new S3({
+    region: 'eu-west-2'
+  });
+
+  console.log('Getting from S3', s3Bucket, `${chart}.json`);
+
+  s3.getObject({
+    Bucket: s3Bucket,
+    Key: `${chart}.json`
+  }, function(err, data) {
+    if (err) {
+      console.log('s3 error', err);
+      context.done(new Error(err));
+    }
+
+    console.log('s3 ok', data);
+    context.done(null, data);
+  });
+}

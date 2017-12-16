@@ -17,6 +17,7 @@
   "homepage": "https://github.com/zallek/lambda-googlecharts#readme",
   "scripts": {},
   "dependencies": {
+    "aws-sdk": "^2.171.0",
     "full-icu": "1.2.0",
     "node-googlecharts": "slashdotdash/node-googlecharts#feature/google-charts-loader"
   }
