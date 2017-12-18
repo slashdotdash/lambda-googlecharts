@@ -1,0 +1,10 @@
+{
+  "chartType": "ColumnChart",
+  "dataTable": [
+    ["", "Germany", "USA", "Brazil", "Canada", "France", "RU"],
+    ["", ${germany}, ${usa}, ${brazil}, ${canada}, ${france}, ${russia}]
+  ],
+  "options": {
+    "title": "Countries"
+  }
+}

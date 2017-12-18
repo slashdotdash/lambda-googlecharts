@@ -19,6 +19,6 @@
   "dependencies": {
     "aws-sdk": "^2.171.0",
     "full-icu": "1.2.0",
-    "node-googlecharts": "slashdotdash/node-googlecharts#feature/google-charts-loader"
+    "@slashdotdash/node-googlecharts": "^1.0.0"
   }
 }

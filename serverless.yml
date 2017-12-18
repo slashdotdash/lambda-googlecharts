@@ -12,25 +12,25 @@ provider:
       Resource: "arn:aws:s3:::${opt:s3bucket}/*"
 
 functions:
-  # chart:
-  #   handler: handler.renderChart
-  #   environment:
-  #       NODE_ICU_DATA: node_modules/full-icu
-  #   events:
-  #     - http:
-  #         path: chart
-  #         method: get
-  #         integration: lambda
-  #         request:
-  #             template:
-  #                 application/json: '{"chartOptions": $input.params(''chartOptions'')}'
-  #         response:
-  #             headers:
-  #                 Access-Control-Allow-Origin: "'*'"
-  #                 Content-Type: "'image/svg+xml'"
-  #             template: $input.path('$')
+  chart:
+    handler: handler.renderChart
+    environment:
+        NODE_ICU_DATA: node_modules/full-icu
+    events:
+      - http:
+          path: chart
+          method: get
+          integration: lambda
+          request:
+              template:
+                  application/json: '{"chartOptions": $input.params(''chartOptions'')}'
+          response:
+              headers:
+                  Access-Control-Allow-Origin: "'*'"
+                  Content-Type: "'image/svg+xml'"
+              template: $input.path('$')
 
-  chart2:
+  s3Chart:
     handler: handler.renderS3Chart
     environment:
       NODE_ICU_DATA: node_modules/full-icu
@@ -59,6 +59,3 @@ functions:
               Access-Control-Allow-Origin: "'*'"
               Content-Type: "'image/svg+xml'"
             template: $input.path('$')
-
-# s3:ListBucket
-# s3:GetObject
